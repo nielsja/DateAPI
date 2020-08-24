@@ -1,0 +1,8 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "./dist",
+    "resolveJsonModule": true
+  }
+}

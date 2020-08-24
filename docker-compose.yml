@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - '8080:8080'
+  # database:
+  #   image: postgres:12
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: admin
+  #     POSTGRES_PASSWORD: example
