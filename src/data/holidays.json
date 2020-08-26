@@ -1,0 +1,10 @@
+[
+  {
+    "Holiday": "New Year's Day",
+    "Date": [{ "Month": 0, "Day": 1 }]
+  },
+  {
+    "Holiday": "Independence Day",
+    "Date": [{ "Month": 6, "Day": 4 }]
+  }
+]
