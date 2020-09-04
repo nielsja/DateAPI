@@ -151,12 +151,12 @@ export abstract class DateEngine {
   //#endregion
 
   static getNextDateString(dateObj: Date): string {
-    var nextDate = this.getNextDate(dateObj);
+    var nextDate = this.getAdjacentDate(dateObj, 1);
     return this.getDateString(nextDate);
   }
 
-  static getNextDate(dateObj: Date): Date {
-    var nextDate = addDays(dateObj, 1);
+  static getAdjacentDate(dateObj: Date, offset: number): Date {
+    var nextDate = addDays(dateObj, offset);
     return nextDate;
   }
 }
