@@ -1,5 +1,11 @@
 import { DateType } from '../contracts';
-import { isWeekend, getDaysInMonth, getDay } from 'date-fns';
+import {
+  isWeekend,
+  getDaysInMonth,
+  getDay,
+  addBusinessDays,
+  addDays,
+} from 'date-fns';
 import * as holidays from '../data/holidays.json';
 
 export abstract class DateEngine {
@@ -37,6 +43,7 @@ export abstract class DateEngine {
     return dateType;
   }
 
+  //#region getDateType Helper Methods
   static checkIfFixedHoliday(dateObj: Date): boolean {
     let isHoliday: boolean = false;
 
@@ -140,5 +147,16 @@ export abstract class DateEngine {
     }
 
     return holidayDate;
+  }
+  //#endregion
+
+  static getNextDateString(dateObj: Date): string {
+    var nextDate = this.getNextDate(dateObj);
+    return this.getDateString(nextDate);
+  }
+
+  static getNextDate(dateObj: Date): Date {
+    var nextDate = addDays(dateObj, 1);
+    return nextDate;
   }
 }

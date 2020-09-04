@@ -1,6 +1,7 @@
 import { DateEngine } from '../../src/services';
 import { DateType } from '../../src/contracts';
 import * as faker from 'faker';
+import { lastDayOfMonth } from 'date-fns';
 
 describe('getDateString()', () => {
   it('should return the date in M/d/yyyy format', () => {
@@ -156,6 +157,21 @@ describe('calculateFloatingDate()', () => {
       week,
       dayOfWeek
     );
+
+    expect(actual).toStrictEqual(expected);
+  });
+});
+
+describe('getAdjacentDate()', () => {
+  it('should return the first of the following month', () => {
+    const year = new Date().getFullYear();
+    const month = faker.random.number(0, 10);
+    const day = lastDayOfMonth(new Date(year, month)).getDate();
+    const testDate = new Date(year, month, day);
+
+    const expected = `new Date(year, month + 1, 1)`;
+
+    const actual = DateEngine.getAdjacentDate(testDate, 1);
 
     expect(actual).toStrictEqual(expected);
   });
