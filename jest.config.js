@@ -24,6 +24,7 @@ module.exports = {
     ],
   ],
   collectCoverageFrom: ['**/src/**/*.ts'],
+  coveragePathIgnorePatterns: ['./src/index.ts'],
   // coverageThreshold: {
   //   global: {
   //     functions: 100,

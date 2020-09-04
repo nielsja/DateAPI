@@ -1,29 +1,9 @@
-import {
-  parseISO,
-  formatISO,
-  isWeekend,
-  getDaysInMonth,
-  getDay,
-} from 'date-fns';
-import * as holidays from '../data/holidays.json';
 import { DateType } from '../contracts';
+import { isWeekend, getDaysInMonth, getDay } from 'date-fns';
+import * as holidays from '../data/holidays.json';
 
-export class DateEngine {
-  test(): string {
-    return 'Date Engine test method hit!';
-  }
-
-  testBody(body: any): string {
-    var bodyString = JSON.stringify(body);
-    return `Body Object: ${bodyString}`;
-  }
-
-  testQuery(query: any): string {
-    let queryString = JSON.stringify(query);
-    return `Query Params: ${queryString}`;
-  }
-
-  getDateString(dateObj: Date): string {
+export abstract class DateEngine {
+  static getDateString(dateObj: Date): string {
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth() + 1;
     const day = dateObj.getDate();
@@ -33,7 +13,7 @@ export class DateEngine {
     return dateString;
   }
 
-  getDateType(dateObj: Date): DateType {
+  static getDateType(dateObj: Date): DateType {
     let dateType: DateType;
 
     // Check if date is a holiday
@@ -57,7 +37,7 @@ export class DateEngine {
     return dateType;
   }
 
-  checkIfFixedHoliday(dateObj: Date): boolean {
+  static checkIfFixedHoliday(dateObj: Date): boolean {
     let isHoliday: boolean = false;
 
     const month = dateObj.getMonth();
@@ -75,7 +55,7 @@ export class DateEngine {
     return isHoliday;
   }
 
-  checkIfFloatingHoliday(dateObj: Date): boolean {
+  static checkIfFloatingHoliday(dateObj: Date): boolean {
     let isHoliday: boolean = false;
 
     const year = dateObj.getFullYear();
@@ -93,22 +73,20 @@ export class DateEngine {
         // Check if day of week matches
         if (holidayDayOfWeek == dayOfWeek) {
           // Get holiday date, check if matches
-          let holidayDate = this.calculateFloatingHoliday(
+          let holidayDate = this.calculateFloatingDate(
             year,
             holidayMonth,
             holidayWeek,
             holidayDayOfWeek
           );
 
-          if (holidayDate != null) {
-            if (
-              holidayDate.getFullYear() == year &&
-              holidayDate.getMonth() == month &&
-              holidayDate.getDate() == day &&
-              holidayDate.getDay() == dayOfWeek
-            ) {
-              isHoliday = true;
-            }
+          if (
+            holidayDate.getFullYear() == year &&
+            holidayDate.getMonth() == month &&
+            holidayDate.getDate() == day &&
+            holidayDate.getDay() == dayOfWeek
+          ) {
+            isHoliday = true;
           }
         }
       }
@@ -117,7 +95,7 @@ export class DateEngine {
     return isHoliday;
   }
 
-  calculateFloatingHoliday(
+  static calculateFloatingDate(
     year: number,
     month: number,
     week: number,

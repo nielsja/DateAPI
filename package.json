@@ -21,6 +21,7 @@
     "@types/jest": "^26.0.10",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
+    "faker": "^5.1.0",
     "jest": "^26.4.1",
     "jest-junit": "^11.1.0",
     "nodemon": "^2.0.4",

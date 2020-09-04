@@ -1,4 +1,4 @@
-import { getDate } from '../../src/endpoints/getDate';
+import { getDate } from '../../src/endpoints';
 import { DateType } from '../../src/contracts';
 
 describe('getDate()', () => {
