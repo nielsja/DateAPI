@@ -28,6 +28,7 @@ app.listen(port, () => {
 });
 
 /* For Postman testing only */
+//#region Postman testing
 app.use(express.json());
 
 app.get('/engine/getDateType', (req, res) => {
@@ -69,3 +70,4 @@ app.get('/engine/calculateFloatingDate', (req, res) => {
   var response = DateEngine.calculateFloatingDate(year, month, week, dayOfWeek);
   res.send(response);
 });
+//#endregion
