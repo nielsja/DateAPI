@@ -2,72 +2,68 @@
   "Fixed": [
     {
       "Holiday": "New Year's Day",
-      "Date": { "Month": 1, "Day": 1 }
+      "Date": { "Month": 0, "Day": 1 }
     },
     {
       "Holiday": "Independence Day",
-      "Date": { "Month": 7, "Day": 4 }
+      "Date": { "Month": 6, "Day": 4 }
     },
     {
       "Holiday": "Veteran's Day",
-      "Date": { "Month": 11, "Day": 11 }
+      "Date": { "Month": 10, "Day": 11 }
     },
     {
       "Holiday": "Christmas Day",
-      "Date": { "Month": 12, "Day": 25 }
-    },
-    {
-      "Holiday": "Test Holiday",
-      "Date": { "Month": 9, "Day": 4 }
+      "Date": { "Month": 11, "Day": 25 }
     }
   ],
   "Floating": [
     {
       "Holiday": "Martin Luther King Jr. Day",
       "Date": {
-        "Month": 1,
-        "Day": 1,
-        "Week": 3
+        "Month": 0,
+        "Week": 3,
+        "DayOfWeek": 1
       }
     },
     {
       "Holiday": "President's Day",
       "Date": {
-        "Month": 2,
-        "Day": 1,
-        "Week": 3
+        "Month": 1,
+        "Week": 3,
+        "DayOfWeek": 1
       }
     },
     {
       "Holiday": "Memorial Day",
       "Date": {
-        "Month": 5,
-        "Day": 1,
-        "Week": -1
+        "Month": 4,
+        "Week": -1,
+        "DayOfWeek": 1
       }
     },
     {
       "Holiday": "Labor Day",
       "Date": {
-        "Month": 9,
-        "Day": 1,
-        "Week": 0
+        "Month": 8,
+        "Week": 1,
+        "DayOfWeek": 1
       }
     },
     {
       "Holiday": "Columbus Day",
       "Date": {
-        "Month": 10,
-        "Day": 1,
-        "Week": 2
+        "Month": 9,
+        "Week": 2,
+        "DayOfWeek": 1
       }
     },
     {
       "Holiday": "Thanksgiving Day",
       "Date": {
-        "Month": 11,
-        "Day": 4,
-        "Week": 4
+        "Month": 10,
+        "Week": 4,
+        "DayOfWeek": 4
       }
     }
   ]
