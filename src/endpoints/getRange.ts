@@ -3,7 +3,7 @@ import { IDate, DateType } from '../contracts';
 export const getRange = (startDateStr: string, endDateStr: string): IDate => {
   return {
     date: 'string',
-    type: DateType.Business,
+    type: DateType.Holiday,
     nextDate: 'string',
     nextBusinessDate: null,
     nextWeekendDate: null,

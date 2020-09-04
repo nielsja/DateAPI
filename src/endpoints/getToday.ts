@@ -3,9 +3,13 @@ import { parseISO } from 'date-fns';
 import { DateEngine } from '../services/DateEngine';
 
 export const getToday = (): IDate => {
+  const dateObj: Date = new Date();
+
+  const engine: DateEngine = new DateEngine();
+
   return {
-    date: 'string',
-    type: DateType.Business,
+    date: engine.getDateString(dateObj),
+    type: engine.getDateType(dateObj),
     nextDate: 'string',
     nextBusinessDate: null,
     nextWeekendDate: null,
