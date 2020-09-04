@@ -1,6 +1,6 @@
-import { IDate, DateType } from './contracts';
+import { IDate, DateType } from '../contracts';
 
-export const getDate = (dateStr: string): IDate => {
+export const getRange = (startDateStr: string, endDateStr: string): IDate => {
   return {
     date: 'string',
     type: DateType.Business,
