@@ -6,5 +6,13 @@
   {
     "Holiday": "Independence Day",
     "Date": [{ "Month": 6, "Day": 4 }]
+  },
+  {
+    "Holiday": "Veteran's Day",
+    "Date": [{ "Month": 10, "Day": 11 }]
+  },
+  {
+    "Holiday": "Christmas Day",
+    "Date": [{ "Month": 11, "Day": 25 }]
   }
 ]
