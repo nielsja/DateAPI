@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { getDate, getRange, getToday } from './endpoints';
 
 const port: number = Number.parseInt(process.env.PORT ?? '3000');
 
@@ -9,15 +10,18 @@ app.get('/', (request, response) => {
 });
 
 app.get('/today', (req, res) => {
-  res.send('today');
+  var response = getToday();
+  res.send(response);
 });
 
 app.get('/date', (req, res) => {
-  res.send('date');
+  var response = getDate('date');
+  res.send(response);
 });
 
 app.get('/range', (req, res) => {
-  res.send('range');
+  var response = getRange('startDate', 'endDate');
+  res.send(response);
 });
 
 app.listen(port, () => {
