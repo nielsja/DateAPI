@@ -7,8 +7,6 @@ import {
   addBusinessDays,
   addDays,
   isBefore,
-  isAfter,
-  isEqual,
 } from 'date-fns';
 import * as holidays from '../data/holidays.json';
 

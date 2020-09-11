@@ -15,8 +15,7 @@ app.get('/today', (req, res) => {
 });
 
 app.get('/date', (req, res) => {
-  let response = getDate('date');
-  res.send(response);
+  res.send(getDate('year', 'month', 'day'));
 });
 
 app.get('/range', (req, res) => {
