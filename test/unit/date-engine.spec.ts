@@ -9,7 +9,6 @@ import {
   isSunday,
   isValid,
 } from 'date-fns';
-//#region TESTS CONFIRMED TO PASS
 describe('getDateString()', () => {
   it('should return the date in M/d/yyyy format', () => {
     const testDate = new Date();
@@ -252,7 +251,6 @@ describe('getAdjacentHolidayDate()', () => {
     });
   });
 });
-//#endregion
 
 //#region getDateType Helper Methods
 describe('checkIfFixedHoliday()', () => {
@@ -262,9 +260,7 @@ describe('checkIfFixedHoliday()', () => {
     const actual = DateEngine.checkIfFixedHoliday(testDate);
     expect(actual).toStrictEqual(expected);
   });
-});
 
-describe('checkIfFixedHoliday()', () => {
   it('should return false', () => {
     const testDate = new Date(2020, 11, 24); // Christmas Eve
     const expected = false;
@@ -276,30 +272,21 @@ describe('checkIfFixedHoliday()', () => {
 describe('checkIfFloatingHoliday()', () => {
   it('should return true', () => {
     const testDate = new Date(2020, 8, 7); // Labor Day 2020
-
     const expected = true;
-
     const actual = DateEngine.checkIfFloatingHoliday(testDate);
-
     expect(actual).toStrictEqual(expected);
   });
-});
 
-describe('checkIfFloatingHoliday()', () => {
   it('should return false', () => {
     const testDate = new Date(2020, 8, 8); // Not Labor Day 2020
-
     const expected = false;
-
     const actual = DateEngine.checkIfFloatingHoliday(testDate);
-
     expect(actual).toStrictEqual(expected);
   });
 });
 
 describe('calculateFloatingDate()', () => {
-  // Testing finding the last occurrence of a day of the week
-  it('should return the date of the floating date pattern - counting from end of month', () => {
+  it('should return the last occurence of a day of the week', () => {
     const year = 2020;
     const month = 1; // February
     const dayOfWeek = 5; // Friday
@@ -316,11 +303,8 @@ describe('calculateFloatingDate()', () => {
 
     expect(actual).toStrictEqual(expected);
   });
-});
 
-describe('calculateFloatingDate()', () => {
-  // Testing finding the Nth occurrence of a day of the week
-  it('should return the date of the floating date pattern - counting the Nth occurrence', () => {
+  it('should return the Nth occurrence of a day of the week', () => {
     const year = 2020;
     const month = 7; // August
     const dayOfWeek = 4; // Thursday
@@ -337,9 +321,7 @@ describe('calculateFloatingDate()', () => {
 
     expect(actual).toStrictEqual(expected);
   });
-});
 
-describe('calculateFloatingDate()', () => {
   it('should not return a date', () => {
     const year = 2020;
     const month = 10; // November
@@ -360,7 +342,7 @@ describe('calculateFloatingDate()', () => {
 });
 
 describe('calculateHolidayDates()', () => {
-  it('should return a list of all holidays in a calendar year in chronological order', () => {
+  it('should return a list of all 2020 holidays in chronological order', () => {
     const year = 2020;
 
     const expected = [
@@ -377,6 +359,8 @@ describe('calculateHolidayDates()', () => {
     ];
 
     const actual = DateEngine.calculateHolidayDates(year);
+
+    expect(actual).toStrictEqual(expected);
   });
 });
 //#endregion
@@ -529,5 +513,4 @@ describe('getAdjacentHolidayDate()', () => {
     expect(actual).toStrictEqual(expected);
   });
 });
-
 //#endregion

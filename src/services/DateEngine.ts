@@ -96,26 +96,11 @@ export abstract class DateEngine {
     searchDirection: boolean
   ): Date {
     const holidayList = this.calculateHolidayDates(startDate.getFullYear());
-    //console.log('Holiday List:', holidayList);
-    //console.log('Start Date: ', startDate);
-    //startDate.setTime(0); // so that the startDate is at midnight like the holidayList dates
-    //console.log('Start Date: ', startDate);
-    let searchDate;
+
     let i = 0;
-    // change the evaluation to compare months and days instead of the date objects
-    //console.log('Holiday list length: ', holidayList.length);
-    // console.log('Holiday #0: ', holidayList[i]);
-    //console.log('Comparison', holidayList[i] < startDate);
     while (holidayList[i] <= startDate && i < holidayList.length) {
-      //console.log('Holiday #' + i + ': ', holidayList[i]);
       i++;
     }
-    //console.log(
-    //   'Start Date is Before?',
-    //   isBefore(startDate, holidayList[i + 1])
-    // );
-    //console.log('Start Date is After? ', isAfter(startDate, holidayList[i]));
-    //console.log('Start Date is Equal? ', isEqual(startDate, holidayList[i]));
 
     if (searchDirection) {
       if (i == holidayList.length) {
@@ -123,27 +108,25 @@ export abstract class DateEngine {
         const nextYearHolidayList = this.calculateHolidayDates(
           startDate.getFullYear() + 1
         );
-        searchDate = nextYearHolidayList[0];
+        return nextYearHolidayList[0];
       } else {
-        searchDate = holidayList[i];
+        return holidayList[i];
       }
     } else {
       if (holidayList[i - 1] < startDate) {
-        searchDate = holidayList[i - 1];
+        return holidayList[i - 1];
       } else {
         if (i > 1) {
-          searchDate = holidayList[i - 2];
+          return holidayList[i - 2];
         } else {
           // if start date is Jan 01, get the last holiday in previous year
           const prevYearHolidayList = this.calculateHolidayDates(
             startDate.getFullYear() - 1
           );
-          searchDate = prevYearHolidayList[prevYearHolidayList.length - 1];
+          return prevYearHolidayList[prevYearHolidayList.length - 1];
         }
       }
     }
-    // console.log('Search Date: ', searchDate);
-    return searchDate;
   }
 
   //#region getDateType Helper Methods
@@ -271,11 +254,12 @@ export abstract class DateEngine {
     }
 
     holidayList.sort(function (a: Date, b: Date) {
-      if (isBefore(a, b)) {
-        return -1;
-      } else {
-        return 1;
-      }
+      // if (isBefore(a, b)) {
+      //   return -1;
+      // } else {
+      //   return 1;
+      // }
+      return isBefore(a, b) ? -1 : 1;
     });
 
     return holidayList;
