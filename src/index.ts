@@ -15,7 +15,7 @@ app.get('/today', (req, res) => {
 });
 
 app.get('/date', (req, res) => {
-  var response = getDate('date');
+  let response = getDate('date');
   res.send(response);
 });
 
@@ -32,42 +32,42 @@ app.listen(port, () => {
 app.use(express.json());
 
 app.get('/engine/getDateType', (req, res) => {
-  var year = Number(req.body.year);
-  var month = Number(req.body.month);
-  var day = Number(req.body.day);
-  var date = new Date(year, month, day);
+  let year = Number(req.body.year);
+  let month = Number(req.body.month);
+  let day = Number(req.body.day);
+  let date = new Date(year, month, day);
 
-  var response = DateEngine.getDateType(date);
+  let response = DateEngine.getDateType(date);
   res.send(response);
 });
 
 app.get('/engine/checkIfFixedHoliday', (req, res) => {
-  var year = Number(req.body.year);
-  var month = Number(req.body.month);
-  var day = Number(req.body.day);
-  var date = new Date(year, month, day);
+  let year = Number(req.body.year);
+  let month = Number(req.body.month);
+  let day = Number(req.body.day);
+  let date = new Date(year, month, day);
 
-  var response = DateEngine.checkIfFixedHoliday(date);
+  let response = DateEngine.checkIfFixedHoliday(date);
   res.send(response);
 });
 
 app.get('/engine/checkIfFloatingHoliday', (req, res) => {
-  var year = Number(req.body.year);
-  var month = Number(req.body.month);
-  var day = Number(req.body.day);
-  var date = new Date(year, month, day);
+  let year = Number(req.body.year);
+  let month = Number(req.body.month);
+  let day = Number(req.body.day);
+  let date = new Date(year, month, day);
 
-  var response = DateEngine.checkIfFloatingHoliday(date);
+  let response = DateEngine.checkIfFloatingHoliday(date);
   res.send(response);
 });
 
 app.get('/engine/calculateFloatingDate', (req, res) => {
-  var year = Number(req.query.year);
-  var month = Number(req.query.month);
-  var week = Number(req.query.week);
-  var dayOfWeek = Number(req.query.dayOfWeek);
+  let year = Number(req.query.year);
+  let month = Number(req.query.month);
+  let week = Number(req.query.week);
+  let dayOfWeek = Number(req.query.dayOfWeek);
 
-  var response = DateEngine.calculateFloatingDate(year, month, week, dayOfWeek);
+  let response = DateEngine.calculateFloatingDate(year, month, week, dayOfWeek);
   res.send(response);
 });
 //#endregion
