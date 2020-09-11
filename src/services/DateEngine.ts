@@ -1,4 +1,5 @@
 import { DateType } from '../contracts';
+import { IDateEngine } from './IDateEngine';
 import {
   isWeekend,
   getDaysInMonth,
@@ -11,15 +12,15 @@ import {
 } from 'date-fns';
 import * as holidays from '../data/holidays.json';
 
-export abstract class DateEngine {
-  static getDateString(dateObj: Date): string {
+export class DateEngine implements IDateEngine {
+  getDateString(dateObj: Date): string {
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth() + 1;
     const day = dateObj.getDate();
     return `${month}/${day}/${year}`;
   }
 
-  static getDateType(dateObj: Date): DateType {
+  getDateType(dateObj: Date): DateType {
     const isFixedHoliday = this.checkIfFixedHoliday(dateObj);
     const isFloatHoliday = this.checkIfFloatingHoliday(dateObj);
 
@@ -34,16 +35,35 @@ export abstract class DateEngine {
     return DateType.Business;
   }
 
+  getNextDate(
+    dateObj: Date,
+    searchDirection: boolean,
+    dateType: DateType = null
+  ): string {
+    switch (dateType) {
+      case DateType.Business:
+        let business = this.getAdjacentBusinessDate(dateObj, searchDirection);
+        return this.getDateString(business);
+      case DateType.Weekend:
+        let weekend = this.getAdjacentWeekendDate(dateObj, searchDirection);
+        return this.getDateString(weekend);
+      case DateType.Holiday:
+        let holiday = this.getAdjacentHolidayDate(dateObj, searchDirection);
+        return this.getDateString(holiday);
+      case null:
+        let calendar = this.getAdjacentCalendarDate(dateObj, searchDirection);
+        return this.getDateString(calendar);
+    }
+  }
+
+  //#region Get Adjacent Date Helper Methods
   /**
    * Gets the Next or Previous calendar date.
    * @param startDate the starting date to calculate from.
    * @param searchDirection describes the direction to find the date.
    * True for next (future) dates, false for previous (past) dates.
    */
-  static getAdjacentCalendarDate(
-    startDate: Date,
-    searchDirection: boolean
-  ): Date {
+  getAdjacentCalendarDate(startDate: Date, searchDirection: boolean): Date {
     let offset = searchDirection ? 1 : -1;
     return addDays(startDate, offset);
   }
@@ -54,10 +74,7 @@ export abstract class DateEngine {
    * @param searchDirection describes the direction to find the date.
    * True for next (future) dates, false for previous (past) dates.
    */
-  static getAdjacentBusinessDate(
-    startDate: Date,
-    searchDirection: boolean
-  ): Date {
+  getAdjacentBusinessDate(startDate: Date, searchDirection: boolean): Date {
     let offset = searchDirection ? 1 : -1;
     let nextDate = addBusinessDays(startDate, offset);
     while (this.getDateType(nextDate) == DateType.Holiday) {
@@ -72,10 +89,7 @@ export abstract class DateEngine {
    * @param searchDirection describes the direction to find the date.
    * True for next (future) dates, false for previous (past) dates.
    */
-  static getAdjacentWeekendDate(
-    startDate: Date,
-    searchDirection: boolean
-  ): Date {
+  getAdjacentWeekendDate(startDate: Date, searchDirection: boolean): Date {
     let offset = searchDirection ? 1 : -1;
     let nextDate: Date = addDays(startDate, offset);
     while (!isWeekend(nextDate)) {
@@ -91,10 +105,7 @@ export abstract class DateEngine {
    * @param searchDirection describes the direction to find the date.
    * True for next (future) dates, false for previous (past) dates.
    */
-  static getAdjacentHolidayDate(
-    startDate: Date,
-    searchDirection: boolean
-  ): Date {
+  getAdjacentHolidayDate(startDate: Date, searchDirection: boolean): Date {
     const holidayList = this.calculateHolidayDates(startDate.getFullYear());
 
     let i = 0;
@@ -128,9 +139,10 @@ export abstract class DateEngine {
       }
     }
   }
+  //#endregion
 
-  //#region getDateType Helper Methods
-  static checkIfFixedHoliday(dateObj: Date): boolean {
+  //#region Holiday Helper Methods
+  checkIfFixedHoliday(dateObj: Date): boolean {
     let isHoliday: boolean = false;
 
     const month = dateObj.getMonth();
@@ -148,7 +160,7 @@ export abstract class DateEngine {
     return isHoliday;
   }
 
-  static checkIfFloatingHoliday(dateObj: Date): boolean {
+  checkIfFloatingHoliday(dateObj: Date): boolean {
     let isHoliday: boolean = false;
 
     const year = dateObj.getFullYear();
@@ -188,7 +200,7 @@ export abstract class DateEngine {
     return isHoliday;
   }
 
-  static calculateFloatingDate(
+  calculateFloatingDate(
     year: number,
     month: number,
     week: number,
@@ -235,7 +247,7 @@ export abstract class DateEngine {
     return holidayDate;
   }
 
-  static calculateHolidayDates(year: number): Date[] {
+  calculateHolidayDates(year: number): Date[] {
     let holidayList: Date[] = [];
 
     for (const fixed of holidays.Fixed) {
