@@ -5,6 +5,9 @@ import {
   getDay,
   addBusinessDays,
   addDays,
+  isBefore,
+  isAfter,
+  isEqual,
 } from 'date-fns';
 import * as holidays from '../data/holidays.json';
 
@@ -13,34 +16,117 @@ export abstract class DateEngine {
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth() + 1;
     const day = dateObj.getDate();
-
-    const dateString = `${month}/${day}/${year}`;
-
-    return dateString;
+    return `${month}/${day}/${year}`;
   }
 
   static getDateType(dateObj: Date): DateType {
-    let dateType: DateType;
-
-    // Check if date is a holiday
     const isFixedHoliday = this.checkIfFixedHoliday(dateObj);
     const isFloatHoliday = this.checkIfFloatingHoliday(dateObj);
 
     if (isFixedHoliday || isFloatHoliday) {
-      dateType = DateType.Holiday;
-    } else {
-      // Check if date is a weekend
-      if (isWeekend(dateObj)) {
-        dateType = DateType.Weekend;
-      }
-
-      // Otherwise, date is a business day
-      else {
-        dateType = DateType.Business;
-      }
+      return DateType.Holiday;
     }
 
-    return dateType;
+    if (isWeekend(dateObj)) {
+      return DateType.Weekend;
+    }
+
+    return DateType.Business;
+  }
+
+  /**
+   * Gets the Next or Previous calendar date.
+   * @param startDate the starting date to calculate from.
+   * @param searchDirection describes the direction to find the date.
+   * True for next (future) dates, false for previous (past) dates.
+   */
+  static getAdjacentCalendarDate(
+    startDate: Date,
+    searchDirection: boolean
+  ): Date {
+    let offset = searchDirection ? 1 : -1;
+    return addDays(startDate, offset);
+  }
+
+  /**
+   * Gets the Next or Previous business date.
+   * @param startDate the starting date to calculate from.
+   * @param searchDirection describes the direction to find the date.
+   * True for next (future) dates, false for previous (past) dates.
+   */
+  static getAdjacentBusinessDate(
+    startDate: Date,
+    searchDirection: boolean
+  ): Date {
+    let offset = searchDirection ? 1 : -1;
+    let nextDate = addBusinessDays(startDate, offset);
+    while (this.getDateType(nextDate) == DateType.Holiday) {
+      nextDate = addBusinessDays(nextDate, offset);
+    }
+    return nextDate;
+  }
+
+  /**
+   * Gets the Next or Previous weekend date.
+   * @param startDate the starting date to calculate from.
+   * @param searchDirection describes the direction to find the date.
+   * True for next (future) dates, false for previous (past) dates.
+   */
+  static getAdjacentWeekendDate(
+    startDate: Date,
+    searchDirection: boolean
+  ): Date {
+    let offset = searchDirection ? 1 : -1;
+    let nextDate: Date = addDays(startDate, offset);
+    while (!isWeekend(nextDate)) {
+      nextDate = addDays(nextDate, offset);
+    }
+
+    return nextDate;
+  }
+
+  /**
+   * Gets the Next or Previous holiday date.
+   * @param startDate the starting date to calculate from.
+   * @param searchDirection describes the direction to find the date.
+   * True for next (future) dates, false for previous (past) dates.
+   */
+  static getAdjacentHolidayDate(
+    startDate: Date,
+    searchDirection: boolean
+  ): Date {
+    const holidayList = this.calculateHolidayDates(startDate.getFullYear());
+
+    let i = 0;
+    while (holidayList[i] <= startDate && i < holidayList.length) {
+      i++;
+    }
+
+    if (searchDirection) {
+      if (i == holidayList.length) {
+        // if start date is after Christmas, get the first holiday in following year
+        const nextYearHolidayList = this.calculateHolidayDates(
+          startDate.getFullYear() + 1
+        );
+        return nextYearHolidayList[0];
+      } else {
+        return holidayList[i];
+      }
+    } else {
+      if (holidayList[i - 1] < startDate) {
+        return holidayList[i - 1];
+      } else {
+        if (i > 1) {
+          return holidayList[i - 2];
+        } else {
+          // if start date is Jan 01, get the last holiday in previous year
+          const prevYearHolidayList = this.calculateHolidayDates(
+            startDate.getFullYear() - 1
+          );
+          return prevYearHolidayList[prevYearHolidayList.length - 1];
+        }
+      }
+    }
   }
 
   //#region getDateType Helper Methods
@@ -116,7 +202,7 @@ export abstract class DateEngine {
       let ordinalCount = 0;
       let dayOfMonth = daysInMonth;
       do {
-        var date = new Date(year, month, dayOfMonth);
+        let date = new Date(year, month, dayOfMonth);
 
         if (getDay(date) == dayOfWeek) {
           ordinalCount++;
@@ -132,7 +218,7 @@ export abstract class DateEngine {
       let ordinalCount = 0;
       let dayOfMonth = 1;
       do {
-        var date = new Date(year, month, dayOfMonth);
+        let date = new Date(year, month, dayOfMonth);
 
         if (getDay(date) == dayOfWeek) {
           ordinalCount++;
@@ -148,15 +234,35 @@ export abstract class DateEngine {
 
     return holidayDate;
   }
+
+  static calculateHolidayDates(year: number): Date[] {
+    let holidayList: Date[] = [];
+
+    for (const fixed of holidays.Fixed) {
+      let fixedDate = new Date(year, fixed.Date.Month, fixed.Date.Day);
+      holidayList.push(fixedDate);
+    }
+
+    for (const floating of holidays.Floating) {
+      let floatDate = this.calculateFloatingDate(
+        year,
+        floating.Date.Month,
+        floating.Date.Week,
+        floating.Date.DayOfWeek
+      );
+      holidayList.push(floatDate);
+    }
+
+    holidayList.sort(function (a: Date, b: Date) {
+      // if (isBefore(a, b)) {
+      //   return -1;
+      // } else {
+      //   return 1;
+      // }
+      return isBefore(a, b) ? -1 : 1;
+    });
+
+    return holidayList;
+  }
   //#endregion
-
-  static getNextDateString(dateObj: Date): string {
-    var nextDate = this.getAdjacentDate(dateObj, 1);
-    return this.getDateString(nextDate);
-  }
-
-  static getAdjacentDate(dateObj: Date, offset: number): Date {
-    var nextDate = addDays(dateObj, offset);
-    return nextDate;
-  }
 }
