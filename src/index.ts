@@ -1,6 +1,5 @@
 import * as express from 'express';
-import { IDate } from './contracts';
-import { getDate, getToday } from './endpoints';
+import { getDate, getRange, getToday } from './endpoints';
 import { DateEngine } from './services';
 
 const port: number = Number.parseInt(process.env.PORT ?? '3000');
@@ -23,8 +22,8 @@ app.get('/today', (req, res) => {
 
 app.get('/date', (req, res) => {
   try {
-    const year = req.body.year.toString();
-    const month = req.body.month.toString();
+    const year = req.body.year;
+    const month = req.body.month;
     const day = req.body.day;
     res.send(getDate(year, month, day));
   } catch (error) {
@@ -34,7 +33,20 @@ app.get('/date', (req, res) => {
 });
 
 app.get('/range', (req, res) => {
-  res.send('range');
+  try {
+    const startYear = req.body.startYear;
+    const startMonth = req.body.startMonth;
+    const startDay = req.body.startDay;
+    const endYear = req.body.endYear;
+    const endMonth = req.body.endMonth;
+    const endDay = req.body.endDay;
+    res.send(
+      getRange(startYear, startMonth, startDay, endYear, endMonth, endDay)
+    );
+  } catch (error) {
+    console.log('Error:', error.message);
+    res.status(400).send({ error: error.message });
+  }
 });
 
 app.listen(port, () => {
