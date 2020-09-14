@@ -163,7 +163,7 @@ export class DateEngine implements IDateEngine {
   }
 
   checkIfFloatingHoliday(dateObj: Date): boolean {
-    const isHoliday = false;
+    let isHoliday = false;
 
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth();
@@ -208,13 +208,13 @@ export class DateEngine implements IDateEngine {
     week: number,
     dayOfWeek: number
   ): Date {
-    const holidayDate: Date;
+    let holidayDate: Date;
     const daysInMonth = getDaysInMonth(new Date(year, month));
 
     // If holiday is the last __ of the month
     if (week == -1) {
-      const ordinalCount = 0;
-      const dayOfMonth = daysInMonth;
+      let ordinalCount = 0;
+      let dayOfMonth = daysInMonth;
       do {
         const date = new Date(year, month, dayOfMonth);
 
@@ -229,8 +229,8 @@ export class DateEngine implements IDateEngine {
 
     // If holiday is the N-th __ of the month
     else {
-      const ordinalCount = 0;
-      const dayOfMonth = 1;
+      let ordinalCount = 0;
+      let dayOfMonth = 1;
       do {
         const date = new Date(year, month, dayOfMonth);
 

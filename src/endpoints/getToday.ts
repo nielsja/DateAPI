@@ -1,6 +1,5 @@
-import { DateEngine } from '../services';
+import { DateEngine, IDateEngine } from '../services';
 import { IDate, DateType } from '../contracts';
-import { IDateEngine } from 'services/IDateEngine';
 
 export const getToday = (): IDate => {
   return {
