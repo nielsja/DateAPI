@@ -1,22 +1,36 @@
 import * as express from 'express';
+import { IDate } from './contracts';
 import { getDate, getToday } from './endpoints';
 import { DateEngine } from './services';
 
 const port: number = Number.parseInt(process.env.PORT ?? '3000');
 
 const app = express();
+app.use(express.json());
 
 app.get('/', (request, response) => {
   response.send('Howdy! You reached the app.');
 });
 
 app.get('/today', (req, res) => {
-  res.send(getToday());
+  try {
+    res.send(getToday());
+  } catch (error) {
+    console.log('Error:', error.message);
+    res.status(400).send({ error: error.message });
+  }
 });
 
 app.get('/date', (req, res) => {
-  const response = getDate('year', 'month', 'day');
-  res.send(response);
+  try {
+    const year = req.body.year.toString();
+    const month = req.body.month.toString();
+    const day = req.body.day;
+    res.send(getDate(year, month, day));
+  } catch (error) {
+    console.log('Error:', error.message);
+    res.status(400).send({ error: error.message });
+  }
 });
 
 app.get('/range', (req, res) => {
@@ -29,8 +43,6 @@ app.listen(port, () => {
 
 /* For Postman testing only */
 //#region Postman testing
-app.use(express.json());
-
 app.get('/engine/getDateType', (req, res) => {
   let year = Number(req.body.year);
   let month = Number(req.body.month);
