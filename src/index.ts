@@ -1,22 +1,36 @@
 import * as express from 'express';
-import { getDate } from './endpoints';
+import { IDate } from './contracts';
+import { getDate, getToday } from './endpoints';
 import { DateEngine } from './services';
 
 const port: number = Number.parseInt(process.env.PORT ?? '3000');
 
 const app = express();
+app.use(express.json());
 
 app.get('/', (request, response) => {
   response.send('Howdy! You reached the app.');
 });
 
 app.get('/today', (req, res) => {
-  res.send('today');
+  try {
+    res.send(getToday());
+  } catch (error) {
+    console.log('Error:', error.message);
+    res.status(400).send({ error: error.message });
+  }
 });
 
 app.get('/date', (req, res) => {
-  let response = getDate('date');
-  res.send(response);
+  try {
+    const year = req.body.year.toString();
+    const month = req.body.month.toString();
+    const day = req.body.day;
+    res.send(getDate(year, month, day));
+  } catch (error) {
+    console.log('Error:', error.message);
+    res.status(400).send({ error: error.message });
+  }
 });
 
 app.get('/range', (req, res) => {
@@ -29,15 +43,13 @@ app.listen(port, () => {
 
 /* For Postman testing only */
 //#region Postman testing
-app.use(express.json());
-
 app.get('/engine/getDateType', (req, res) => {
   let year = Number(req.body.year);
   let month = Number(req.body.month);
   let day = Number(req.body.day);
   let date = new Date(year, month, day);
 
-  let response = DateEngine.getDateType(date);
+  let response = new DateEngine().getDateType(date);
   res.send(response);
 });
 
@@ -47,7 +59,7 @@ app.get('/engine/checkIfFixedHoliday', (req, res) => {
   let day = Number(req.body.day);
   let date = new Date(year, month, day);
 
-  let response = DateEngine.checkIfFixedHoliday(date);
+  let response = new DateEngine().checkIfFixedHoliday(date);
   res.send(response);
 });
 
@@ -57,7 +69,7 @@ app.get('/engine/checkIfFloatingHoliday', (req, res) => {
   let day = Number(req.body.day);
   let date = new Date(year, month, day);
 
-  let response = DateEngine.checkIfFloatingHoliday(date);
+  let response = new DateEngine().checkIfFloatingHoliday(date);
   res.send(response);
 });
 
@@ -67,7 +79,12 @@ app.get('/engine/calculateFloatingDate', (req, res) => {
   let week = Number(req.query.week);
   let dayOfWeek = Number(req.query.dayOfWeek);
 
-  let response = DateEngine.calculateFloatingDate(year, month, week, dayOfWeek);
+  let response = new DateEngine().calculateFloatingDate(
+    year,
+    month,
+    week,
+    dayOfWeek
+  );
   res.send(response);
 });
 //#endregion
