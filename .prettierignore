@@ -1,1 +1,9 @@
-{}
+# Ignore artifacts:
+node_modules/
+dist/
+test-reports/
+coverage/
+
+# Ignore all HTML files:
+*.html
+

@@ -1,3 +1,5 @@
+/*global module */
+/*esLint no-undef: "error"*/
 module.exports = {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js'],

@@ -39,18 +39,22 @@ export class DateEngine implements IDateEngine {
     dateType: DateType = null
   ): string {
     switch (dateType) {
-      case DateType.Business:
-        let business = this.getAdjacentBusinessDate(dateObj, searchDirection);
+      case DateType.Business: {
+        const business = this.getAdjacentBusinessDate(dateObj, searchDirection);
         return this.getDateString(business);
-      case DateType.Weekend:
-        let weekend = this.getAdjacentWeekendDate(dateObj, searchDirection);
+      }
+      case DateType.Weekend: {
+        const weekend = this.getAdjacentWeekendDate(dateObj, searchDirection);
         return this.getDateString(weekend);
-      case DateType.Holiday:
-        let holiday = this.getAdjacentHolidayDate(dateObj, searchDirection);
+      }
+      case DateType.Holiday: {
+        const holiday = this.getAdjacentHolidayDate(dateObj, searchDirection);
         return this.getDateString(holiday);
-      case null:
-        let calendar = this.getAdjacentCalendarDate(dateObj, searchDirection);
+      }
+      case null: {
+        const calendar = this.getAdjacentCalendarDate(dateObj, searchDirection);
         return this.getDateString(calendar);
+      }
     }
   }
 
@@ -62,7 +66,7 @@ export class DateEngine implements IDateEngine {
    * True for next (future) dates, false for previous (past) dates.
    */
   getAdjacentCalendarDate(startDate: Date, searchDirection: boolean): Date {
-    let offset = searchDirection ? 1 : -1;
+    const offset = searchDirection ? 1 : -1;
     return addDays(startDate, offset);
   }
 
@@ -73,7 +77,7 @@ export class DateEngine implements IDateEngine {
    * True for next (future) dates, false for previous (past) dates.
    */
   getAdjacentBusinessDate(startDate: Date, searchDirection: boolean): Date {
-    let offset = searchDirection ? 1 : -1;
+    const offset = searchDirection ? 1 : -1;
     let nextDate = addBusinessDays(startDate, offset);
     while (this.getDateType(nextDate) == DateType.Holiday) {
       nextDate = addBusinessDays(nextDate, offset);
@@ -88,7 +92,7 @@ export class DateEngine implements IDateEngine {
    * True for next (future) dates, false for previous (past) dates.
    */
   getAdjacentWeekendDate(startDate: Date, searchDirection: boolean): Date {
-    let offset = searchDirection ? 1 : -1;
+    const offset = searchDirection ? 1 : -1;
     let nextDate: Date = addDays(startDate, offset);
     while (!isWeekend(nextDate)) {
       nextDate = addDays(nextDate, offset);
@@ -141,14 +145,14 @@ export class DateEngine implements IDateEngine {
 
   //#region Holiday Helper Methods
   checkIfFixedHoliday(dateObj: Date): boolean {
-    let isHoliday: boolean = false;
+    let isHoliday = false;
 
     const month = dateObj.getMonth();
     const day = dateObj.getDate();
 
     holidays.Fixed.forEach((holiday) => {
-      let holidayMonth = holiday.Date.Month;
-      let holidayDay = holiday.Date.Day;
+      const holidayMonth = holiday.Date.Month;
+      const holidayDay = holiday.Date.Day;
 
       if (holidayMonth == month && holidayDay == day) {
         isHoliday = true;
@@ -159,7 +163,7 @@ export class DateEngine implements IDateEngine {
   }
 
   checkIfFloatingHoliday(dateObj: Date): boolean {
-    let isHoliday: boolean = false;
+    const isHoliday = false;
 
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth();
@@ -167,16 +171,16 @@ export class DateEngine implements IDateEngine {
     const dayOfWeek = dateObj.getDay();
 
     holidays.Floating.forEach((holiday) => {
-      let holidayMonth = holiday.Date.Month;
-      let holidayWeek = holiday.Date.Week;
-      let holidayDayOfWeek = holiday.Date.DayOfWeek;
+      const holidayMonth = holiday.Date.Month;
+      const holidayWeek = holiday.Date.Week;
+      const holidayDayOfWeek = holiday.Date.DayOfWeek;
 
       // Check if month matches
       if (holidayMonth == month) {
         // Check if day of week matches
         if (holidayDayOfWeek == dayOfWeek) {
           // Get holiday date, check if matches
-          let holidayDate = this.calculateFloatingDate(
+          const holidayDate = this.calculateFloatingDate(
             year,
             holidayMonth,
             holidayWeek,
@@ -204,15 +208,15 @@ export class DateEngine implements IDateEngine {
     week: number,
     dayOfWeek: number
   ): Date {
-    let holidayDate: Date;
+    const holidayDate: Date;
     const daysInMonth = getDaysInMonth(new Date(year, month));
 
     // If holiday is the last __ of the month
     if (week == -1) {
-      let ordinalCount = 0;
-      let dayOfMonth = daysInMonth;
+      const ordinalCount = 0;
+      const dayOfMonth = daysInMonth;
       do {
-        let date = new Date(year, month, dayOfMonth);
+        const date = new Date(year, month, dayOfMonth);
 
         if (getDay(date) == dayOfWeek) {
           ordinalCount++;
@@ -225,10 +229,10 @@ export class DateEngine implements IDateEngine {
 
     // If holiday is the N-th __ of the month
     else {
-      let ordinalCount = 0;
-      let dayOfMonth = 1;
+      const ordinalCount = 0;
+      const dayOfMonth = 1;
       do {
-        let date = new Date(year, month, dayOfMonth);
+        const date = new Date(year, month, dayOfMonth);
 
         if (getDay(date) == dayOfWeek) {
           ordinalCount++;
@@ -246,15 +250,15 @@ export class DateEngine implements IDateEngine {
   }
 
   calculateHolidayDates(year: number): Date[] {
-    let holidayList: Date[] = [];
+    const holidayList: Date[] = [];
 
     for (const fixed of holidays.Fixed) {
-      let fixedDate = new Date(year, fixed.Date.Month, fixed.Date.Day);
+      const fixedDate = new Date(year, fixed.Date.Month, fixed.Date.Day);
       holidayList.push(fixedDate);
     }
 
     for (const floating of holidays.Floating) {
-      let floatDate = this.calculateFloatingDate(
+      const floatDate = this.calculateFloatingDate(
         year,
         floating.Date.Month,
         floating.Date.Week,
