@@ -91,7 +91,7 @@ export const getRange = (
 
   const inputDates = eachDayOfInterval({ start: startDate, end: endDate });
 
-  let resultDates = inputDates.map((date) => {
+  const resultDates = inputDates.map((date) => {
     return {
       date: engine.getDateString(date),
       type: engine.getDateType(date),
