@@ -62,7 +62,7 @@ describe('getDate()', () => {
   });
 
   describe('should throw error', () => {
-    it('invalid year, month, day', () => {
+    it('date values cannot be parsed to numbers', () => {
       const error = new Error(
         'The following value(s) are invalid; please enter a number for: year, month, day.'
       );
@@ -72,53 +72,13 @@ describe('getDate()', () => {
       }).toThrow(error.message);
     });
 
-    it('invalid year and day', () => {
-      const error = new Error(
-        'The following value(s) are invalid; please enter a number for: year, day.'
-      );
-
-      expect(() => {
-        getDate('a', '10', 'c');
-      }).toThrow(error.message);
-    });
-
-    it('invalid month only', () => {
-      const error = new Error(
-        'The following value(s) are invalid; please enter a number for: month.'
-      );
-
-      expect(() => {
-        getDate('2020', 'b', '28');
-      }).toThrow(error.message);
-    });
-
-    it('invalid year, month, day (negative)', () => {
+    it('date values are negative', () => {
       const error = new Error(
         'The following value(s) are invalid; please enter a number greater than 0 for: year, month, day.'
       );
 
       expect(() => {
         getDate('-1', '-5', '-10');
-      }).toThrow(error.message);
-    });
-
-    it('invalid year, day (negative)', () => {
-      const error = new Error(
-        'The following value(s) are invalid; please enter a number greater than 0 for: year, day.'
-      );
-
-      expect(() => {
-        getDate('-1', '5', '-10');
-      }).toThrow(error.message);
-    });
-
-    it('invalid month only (negative)', () => {
-      const error = new Error(
-        'The following value(s) are invalid; please enter a number greater than 0 for: month.'
-      );
-
-      expect(() => {
-        getDate('2020', '-5', '10');
       }).toThrow(error.message);
     });
 
@@ -138,27 +98,7 @@ describe('getDate()', () => {
       );
 
       expect(() => {
-        getDate('2020', '5', '32');
-      }).toThrow(error.message);
-    });
-
-    it('invalid day (April 31)', () => {
-      const error = new Error(
-        'Day is invalid; please enter a number between 1 and 30.'
-      );
-
-      expect(() => {
-        getDate('2020', '4', '31');
-      }).toThrow(error.message);
-    });
-
-    it('invalid day (Feb 29 on non-leap year)', () => {
-      const error = new Error(
-        'Day is invalid; please enter a number between 1 and 28.'
-      );
-
-      expect(() => {
-        getDate('2021', '2', '29');
+        getDate('2020', '12', '32');
       }).toThrow(error.message);
     });
   });

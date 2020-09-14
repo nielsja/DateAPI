@@ -1,80 +1,46 @@
-import { DateEngine, IDateEngine } from '../services';
+import {
+  DateEngine,
+  IDateEngine,
+  DateValidationEngine,
+  IDateValidationEngine,
+} from '../services';
 import { IDate, DateType } from '../contracts';
-import { lastDayOfMonth } from 'date-fns';
 
 export const getDate = (
   yearStr: string,
   monthStr: string,
   dayStr: string
 ): IDate => {
-  //#region Make sure all values can be parsed to a number
-  if (
-    isNaN(Number(yearStr)) ||
-    isNaN(Number(monthStr)) ||
-    isNaN(Number(dayStr))
-  ) {
-    let yearInvalid = isNaN(Number(yearStr));
-    let monthInvalid = isNaN(Number(monthStr));
-    let dayInvalid = isNaN(Number(dayStr));
-    let numberInvalid =
-      (yearInvalid == true ? 1 : 0) +
-      (monthInvalid == true ? 1 : 0) +
-      (dayInvalid == true ? 1 : 0);
+  const dateValidation: IDateValidationEngine = new DateValidationEngine();
 
-    let errorMessage =
-      'The following value(s) are invalid; please enter a number for: ' +
-      (yearInvalid == true ? 'year' : '') +
-      (yearInvalid == true && numberInvalid > 1 ? ', ' : '') +
-      (monthInvalid == true ? 'month' : '') +
-      (monthInvalid == true && numberInvalid > 2 ? ', ' : '') +
-      (dayInvalid == true ? 'day' : '') +
-      '.';
-    throw new Error(errorMessage);
+  // Make sure all values can be parsed to a number
+  const parseNumberResponse = dateValidation.parseDateStringToNumber(
+    yearStr,
+    monthStr,
+    dayStr
+  );
+  if (parseNumberResponse != null) {
+    throw new Error(parseNumberResponse);
   }
-  //#endregion
 
-  //#region Make sure all values are positive
+  // Parse the strings to numbers
   const year = Number(yearStr);
   const month = Number(monthStr);
   const day = Number(dayStr);
 
-  if (year < 0 || month < 0 || day < 0) {
-    let yearInvalid = year < 0 ? true : false;
-    let monthInvalid = month < 0 ? true : false;
-    let dayInvalid = day < 0 ? true : false;
-    let numberInvalid =
-      (yearInvalid == true ? 1 : 0) +
-      (monthInvalid == true ? 1 : 0) +
-      (dayInvalid == true ? 1 : 0);
-
-    let errorMessage =
-      'The following value(s) are invalid; please enter a number greater than 0 for: ' +
-      (yearInvalid == true ? 'year' : '') +
-      (yearInvalid == true && numberInvalid > 1 ? ', ' : '') +
-      (monthInvalid == true ? 'month' : '') +
-      (monthInvalid == true && numberInvalid > 2 ? ', ' : '') +
-      (dayInvalid == true ? 'day' : '') +
-      '.';
-    throw new Error(errorMessage);
-  }
-  //#endregion
-
-  //#region Make sure all values are valid
-  if (month > 12) {
-    throw new Error(
-      'Month is invalid; please enter a number between 1 and 12.'
-    );
+  // Make sure all values are positive
+  const positiveResponse = dateValidation.checkPositiveValues(year, month, day);
+  if (positiveResponse != null) {
+    throw new Error(positiveResponse);
   }
 
-  if (day > lastDayOfMonth(new Date(year, month - 1)).getDate()) {
-    const lastDay = lastDayOfMonth(new Date(year, month - 1)).getDate();
-
-    throw new Error(
-      `Day is invalid; please enter a number between 1 and ${lastDay}.`
-    );
+  // Make sure all values are valid
+  const datesValidResponse = dateValidation.checkValidValues(year, month, day);
+  if (datesValidResponse != null) {
+    throw new Error(datesValidResponse);
   }
-  //#endregion
 
+  // Create the date and call the engine
   const date = new Date(year, month - 1, day);
   const engine: IDateEngine = new DateEngine();
 
