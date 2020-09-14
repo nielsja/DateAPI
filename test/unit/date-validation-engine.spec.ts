@@ -207,10 +207,24 @@ describe('checkValidValues()', () => {
     });
   });
   describe('should return string error message', () => {
+    it('invalid month (0)', () => {
+      const expected =
+        'Month is invalid; please enter a number between 1 and 12.';
+      const actual = engine.checkValidValues(2020, 0, 1);
+      expect(actual).toStrictEqual(expected);
+    });
+
     it('invalid month (>12)', () => {
       const expected =
         'Month is invalid; please enter a number between 1 and 12.';
       const actual = engine.checkValidValues(2020, 13, 1);
+      expect(actual).toStrictEqual(expected);
+    });
+
+    it('invalid day (0)', () => {
+      const expected =
+        'Day is invalid; please enter a number between 1 and 31.';
+      const actual = engine.checkValidValues(2020, 5, 0);
       expect(actual).toStrictEqual(expected);
     });
 

@@ -57,11 +57,11 @@ export class DateValidationEngine implements IDateValidationEngine {
   }
 
   checkValidValues(year: number, month: number, day: number): string {
-    if (month > 12) {
+    if (month == 0 || month > 12) {
       return 'Month is invalid; please enter a number between 1 and 12.';
     }
 
-    if (day > lastDayOfMonth(new Date(year, month - 1)).getDate()) {
+    if (day == 0 || day > lastDayOfMonth(new Date(year, month - 1)).getDate()) {
       const lastDay = lastDayOfMonth(new Date(year, month - 1)).getDate();
 
       return `Day is invalid; please enter a number between 1 and ${lastDay}.`;
