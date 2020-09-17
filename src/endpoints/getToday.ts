@@ -1,11 +1,7 @@
-import { DateEngine } from '../services';
+import { DateEngine, IDateEngine } from '../services';
 import { IDate, DateType } from '../contracts';
-import { IDateEngine } from 'services/IDateEngine';
 
 export const getToday = (): IDate => {
-  const engine: IDateEngine = new DateEngine();
-  const date = new Date();
-
   return {
     date: 'string',
     type: DateType.Business,
@@ -18,6 +14,9 @@ export const getToday = (): IDate => {
     previousWeekendDate: 'string',
     previousHolidayDate: 'string',
   };
+
+  // const engine: IDateEngine = new DateEngine();
+  // const date = new Date();
 
   // return {
   //   date: engine.getDateString(date),

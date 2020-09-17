@@ -12,15 +12,15 @@ export class DateValidationEngine implements IDateValidationEngine {
       isNaN(Number(monthStr)) ||
       isNaN(Number(dayStr))
     ) {
-      let yearInvalid = isNaN(Number(yearStr));
-      let monthInvalid = isNaN(Number(monthStr));
-      let dayInvalid = isNaN(Number(dayStr));
-      let numberInvalid =
+      const yearInvalid = isNaN(Number(yearStr));
+      const monthInvalid = isNaN(Number(monthStr));
+      const dayInvalid = isNaN(Number(dayStr));
+      const numberInvalid =
         (yearInvalid == true ? 1 : 0) +
         (monthInvalid == true ? 1 : 0) +
         (dayInvalid == true ? 1 : 0);
 
-      let errorMessage =
+      const errorMessage =
         'The following value(s) are invalid; please enter a number for: ' +
         (yearInvalid == true ? 'year' : '') +
         (yearInvalid == true && numberInvalid > 1 ? ', ' : '') +
@@ -35,15 +35,15 @@ export class DateValidationEngine implements IDateValidationEngine {
 
   checkPositiveValues(year: number, month: number, day: number): string {
     if (year < 0 || month < 0 || day < 0) {
-      let yearInvalid = year < 0 ? true : false;
-      let monthInvalid = month < 0 ? true : false;
-      let dayInvalid = day < 0 ? true : false;
-      let numberInvalid =
+      const yearInvalid = year < 0 ? true : false;
+      const monthInvalid = month < 0 ? true : false;
+      const dayInvalid = day < 0 ? true : false;
+      const numberInvalid =
         (yearInvalid == true ? 1 : 0) +
         (monthInvalid == true ? 1 : 0) +
         (dayInvalid == true ? 1 : 0);
 
-      let errorMessage =
+      const errorMessage =
         'The following value(s) are invalid; please enter a number greater than 0 for: ' +
         (yearInvalid == true ? 'year' : '') +
         (yearInvalid == true && numberInvalid > 1 ? ', ' : '') +
